@@ -62,6 +62,8 @@ class Grid:
 
     def sketch(self, val):
         """ Sketch a placeholder onto a box """
+        row, col = self.selected
+        self.boxes[row][col].set_temp(val)
 
     def draw(self, win):
         """ Draw the grid lines and boxes onto canvas """
