@@ -18,7 +18,7 @@ class Grid:
         [0, 4, 9, 2, 0, 6, 0, 0, 7]
     ]
 
-    def __init__(self, rows: int, cols: int, width: int, height: int, win):
+    def __init__(self, rows: int, cols: int, width: int, height: int, board: list, win):
         """
         Construct a grid for sudoku.
 
@@ -26,10 +26,12 @@ class Grid:
         :param cols: an integer indicating how many columns the grid will have
         :param width: an integer indicating the width of the model
         :param height: an integer indicating the height of the model
+        :param board: a list containing a list of integers that represent a valid Sudoku board
         :param win: a pygame display object
         """
         self.rows = rows
         self.cols = cols
+        self.board = board
         self.boxes = [[Box(self.board[i][j], i, j, width, height) for j in range(cols)] for i in range(rows)]
         self.width = width
         self.height = height
@@ -112,13 +114,22 @@ class Grid:
         if self.boxes[row][col].value == 0:
             self.boxes[row][col].set_temp(0)
 
-    def click(self, pos):
+    def click(self, pos: tuple):
         """ Return the position of clicked box """
 
 
-    def is_finished(self):
-        """ Check if Sudoku board is completed """
+    def is_finished(self) -> bool:
+        """
+        Check if Sudoku board is completed
 
+        :return: a boolean true or false
+        """
+
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if self.boxes[i][j].value == 0:
+                    return False
+        return True
 
 class Box:
     rows = 9
