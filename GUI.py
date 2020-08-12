@@ -30,7 +30,7 @@ class Grid:
 
     def update_model(self):
         """ Update the Grid into new state """
-        self.model = [[self.cube[i][j].value for j in range(self.cols)] for i in range(self.rows)]
+        self.model = [[self.boxes[i][j].value for j in range(self.cols)] for i in range(self.rows)]
 
 
     def place(self, val):
@@ -38,7 +38,7 @@ class Grid:
 
 
     def sketch(self, val):
-        """ Sketch a placeholer onto a box """
+        """ Sketch a placeholder onto a box """
 
     def draw(self, win):
         """ Draw the grid lines and boxes onto canvas """
