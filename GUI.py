@@ -91,14 +91,30 @@ class Grid:
                 self.boxes[i][j].draw(self.win)
 
     def select(self, row, col):
-        """ Select a box in the grid """
+        """
+        Select a box in the grid
 
+        :param row: an integer that represents the row coordinate
+        :param col: an integer that represents the column coordinate
+        """
+
+        # Reset all other boxes as not selected
+        for i in range(self.rows):
+            for j in range(self.cols):
+                self.boxes[i][j].selected = False
+
+        self.boxes[row][col].selected = True
+        self.selected = (row, col)
 
     def clear(self):
-        """ Clear all boxes of the grid """
+        """ Clear selected box of the grid """
+        row, col = self.selected
+        if self.boxes[row][col].value == 0:
+            self.boxes[row][col].set_temp(0)
 
     def click(self, pos):
         """ Return the position of clicked box """
+
 
     def is_finished(self):
         """ Check if Sudoku board is completed """
