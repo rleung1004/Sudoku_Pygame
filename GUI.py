@@ -18,7 +18,7 @@ class Grid:
         [0, 4, 9, 2, 0, 6, 0, 0, 7]
     ]
 
-    def __init__(self, rows: int, cols: int, width: int, height: int):
+    def __init__(self, rows: int, cols: int, width: int, height: int, win):
         """
         Construct a grid for sudoku.
 
@@ -26,6 +26,7 @@ class Grid:
         :param cols: an integer indicating how many columns the grid will have
         :param width: an integer indicating the width of the model
         :param height: an integer indicating the height of the model
+        :param win: a pygame display object
         """
         self.rows = rows
         self.cols = cols
@@ -34,6 +35,7 @@ class Grid:
         self.height = height
         self.model = None
         self.selected = None
+        self.win = win
 
 
     def update_model(self):
@@ -61,12 +63,32 @@ class Grid:
                 return False
 
     def sketch(self, val):
-        """ Sketch a placeholder onto a box """
+        """
+        Sketch a placeholder onto a box
+
+        :param val: an integer 1 to 9
+        """
         row, col = self.selected
         self.boxes[row][col].set_temp(val)
 
-    def draw(self, win):
+    def draw(self):
         """ Draw the grid lines and boxes onto canvas """
+        # Draw grid lines
+        gap = self.width / 9
+        for i in range(self.rows + 1):
+            # In every three box, a thick line needs to been drawn to create the a section
+            if i % 3 == 0 and i != 0:
+                thick = 4
+            else:
+                thick = 1
+
+            pygame.draw.line(self.win, (0, 0, 0), (0, i * gap), (self.width, i * gap), thick)
+            pygame.draw.line(self.win, (0, 0, 0), (i * gap, 0), (i * gap, self.height), thick)
+
+        # Draw boxes
+        for i in range(self.rows):
+            for j in range(self.cols):
+                self.boxes[i][j].draw(self.win)
 
     def select(self, row, col):
         """ Select a box in the grid """
