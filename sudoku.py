@@ -1,4 +1,115 @@
+import random
+import copy
+
+
+class Sudoku:
+    """ Generate and solve Sudoku puzzles using backtracking algorithm """
+
+    def __init__(self):
+        self.counter = 0
+        self.board = [[0 for i in range(9)] for j in range(9)]
+        self.generate_puzzle()
+
+    def print_board(self):
+        """ Print the sudoku board """
+        for i in range(len(self.board)):
+            if i % 3 == 0 and i != 0:
+                print("- - - - - - - - - - - - - ")
+
+            for j in range(len(self.board[i])):
+                if j % 3 == 0 and j != 0:
+                    print(" | ", end="")
+
+                if j == 8:
+                    print(self.board[i][j])
+
+                else:
+                    print(str(self.board[i][j]) + " ", end="")
+
+    def generate_puzzle(self):
+        """ Generate a Sudoku puzzle using backtracking algorithm """
+        self.generate_solution(self.board)
+        self.remove_numbers_from_board()
+        return
+
+    def solve_puzzle(self, board):
+        """ solve the sudoku puzzle with backtracking """
+        for i in range(81):
+            row = i // 9
+            col = i % 9
+            # find next empty cell
+            if board[row][col] == 0:
+                for number in range(1, 10):
+                    # check that the number hasn't been used in the row/col/subgrid
+                    if valid(board, number, (row, col)):
+                        board[row][col] = number
+                        if not find_empty(board):
+                            self.counter += 1
+                            break
+                        else:
+                            if self.solve_puzzle(board):
+                                return True
+                break
+        board[row][col] = 0
+        return False
+
+    def generate_solution(self, board):
+        """generates a full solution with backtracking"""
+        number_list = [i for i in range(1, 10)]
+        empty = find_empty(board)
+        if not empty:
+            return True
+        else:
+            row, col = empty
+
+        random.shuffle(number_list)
+        for number in number_list:
+            if valid(board, number, (row, col)):
+                board[row][col] = number
+                if not find_empty(board):
+                    return True
+                else:
+                    if self.generate_solution(board):
+                        # if the grid is full
+                        return True
+            board[row][col] = 0
+
+        return False
+
+    def remove_numbers_from_board(self):
+        # get all non-empty squares from solution board
+        non_empty_squares = get_non_empty_squares(self.board)
+        non_empty_squares_count = len(non_empty_squares)
+        rounds = 3
+
+        while rounds > 0 and non_empty_squares_count >= 17:
+            row, col = non_empty_squares.pop()
+            non_empty_squares_count -= 1
+            # store current value in case removing this creates multiple solutions
+            removed_square = self.board[row][col]
+            self.board[row][col] = 0
+            # make a copy of board to solve it
+            board_copy = copy.deepcopy(self.board)
+            # initialize solution counter to zero
+            self.counter = 0
+            self.solve_puzzle(board_copy)
+            # if there is more than one solution, put the previous removed square back into grid
+            if self.counter != 1:
+                self.board[row][col] = removed_square
+                non_empty_squares_count += 1
+                rounds -= 1
+        return
+
+
 def valid(board: list, num: int, pos: tuple) -> bool:
+    """
+    Check if the number put into given position of a Sudoku puzzle is valid or not.
+
+    :param board: a list containing a list of integers
+    :param num: an integer 1 to 9
+    :param pos: a tuple containing coordinates (row, col)
+    :return: a boolean True or False
+    """
     # Check rows
     for i in range(len(board[0])):
         if board[pos[0]][i] == num and pos[1] != i:
@@ -21,52 +132,6 @@ def valid(board: list, num: int, pos: tuple) -> bool:
     return True
 
 
-def solve(board: list) -> bool:
-    """
-    Solve the given Sudoku board.
-
-    :param board: a list containing list of integers
-    :return: a boolean true or false
-    """
-    empty = find_empty(board)
-    if not empty:
-        return True
-    else:
-        row, col = empty
-
-    for i in range(1, 10):
-        if valid(board, i, empty):
-            board[row][col] = i
-
-            if solve(board):
-                return True
-
-            board[row][col] = 0
-
-    return False
-
-
-def print_board(board: list):
-    """
-    Print a sudoku board.
-
-    :param board: a list containing list of integers
-    """
-    for i in range(len(board)):
-        if i % 3 == 0 and i != 0:
-            print("- - - - - - - - - - - - - ")
-
-        for j in range(len(board[i])):
-            if j % 3 == 0 and j != 0:
-                print(" | ", end="")
-
-            if j == 8:
-                print(board[i][j])
-
-            else:
-                print(str(board[i][j]) + " ", end="")
-
-
 def find_empty(board) -> tuple:
     """
     Return the next empty coordinate.
@@ -83,23 +148,19 @@ def find_empty(board) -> tuple:
     return None
 
 
+def get_non_empty_squares(board):
+    non_empty_squares = list()
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] != 0:
+                non_empty_squares.append((i, j))
+    random.shuffle(non_empty_squares)
+    return non_empty_squares
+
+
 def main():
-    # mock game board
-    game_board = [
-        [7, 8, 0, 4, 0, 0, 1, 2, 0],
-        [6, 0, 0, 0, 7, 5, 0, 0, 9],
-        [0, 0, 0, 6, 0, 1, 0, 7, 8],
-        [0, 0, 7, 0, 4, 0, 2, 6, 0],
-        [0, 0, 1, 0, 5, 0, 9, 3, 0],
-        [9, 0, 4, 0, 6, 0, 0, 0, 5],
-        [0, 7, 0, 3, 0, 0, 0, 1, 2],
-        [1, 2, 0, 0, 0, 7, 4, 0, 0],
-        [0, 4, 9, 2, 0, 6, 0, 0, 7]
-    ]
-    print_board(game_board)
-    solve(game_board)
-    print()
-    print_board(game_board)
+    sudoku = Sudoku()
+    sudoku.print_board()
 
 
 if __name__ == "__main__":
