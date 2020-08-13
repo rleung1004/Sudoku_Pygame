@@ -115,6 +115,35 @@ class Grid:
             row = pos[1] // square
             return int(row), int(col)
 
+    def solve_gui(self):
+        self.update_model()
+        empty = sudoku.find_empty(self.model)
+        if not empty:
+            return True
+        else:
+            row, col = empty
+
+        for i in range(1, 10):
+            if sudoku.valid(self.model, i, (row, col)):
+                self.model[row][col] = i
+                self.boxes[row][col].set(i)
+                self.boxes[row][col].draw_solution(self.win, True)
+                self.update_model()
+                pygame.display.update()
+                pygame.time.delay(100)
+
+                if self.solve_gui():
+                    return True
+
+                self.model[row][col] = 0
+                self.boxes[row][col].set(0)
+                self.update_model()
+                self.boxes[row][col].draw_solution(self.win, False)
+                pygame.display.update()
+                pygame.time.delay(100)
+
+        return False
+
     def is_finished(self) -> bool:
         """
         Check if Sudoku board is completed
@@ -158,6 +187,22 @@ class Box:
             win.blit(text, (x + (square / 2 - text.get_width() / 2), y + (square / 2 - text.get_height() / 2)))
 
         if self.selected:
+            pygame.draw.rect(win, (255, 0, 0), (x, y, square, square), 3)
+
+    def draw_solution(self, win, correct=True):
+        fnt = pygame.font.SysFont("arial", 40)
+
+        square = self.width / 9
+        x = self.col * square
+        y = self.row * square
+
+        pygame.draw.rect(win, (255, 255, 255), (x, y, square, square), 0)
+        text = fnt.render(str(self.value), 1, (0, 0, 0))
+        win.blit(text, (x + (square / 2 - text.get_width() / 2), y + (square / 2 - text.get_height() / 2)))
+
+        if correct:
+            pygame.draw.rect(win, (0, 255, 0), (x, y, square, square), 3)
+        else:
             pygame.draw.rect(win, (255, 0, 0), (x, y, square, square), 3)
 
     def set(self, val):
@@ -245,7 +290,10 @@ def main():
                         key = None
 
                         if game_board.is_finished():
+                            print("GAME OVER")
                             run = False
+                if event.key == pygame.K_SPACE:
+                    game_board.solve_gui()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
