@@ -11,7 +11,7 @@ class Sudoku:
         self.generate_puzzle()
 
     def print_board(self):
-        """ Print the sudoku board """
+        """ Print the Sudoku board """
         for i in range(len(self.board)):
             if i % 3 == 0 and i != 0:
                 print("- - - - - - - - - - - - - ")
@@ -32,8 +32,13 @@ class Sudoku:
         self.remove_numbers_from_board()
         return
 
-    def solve_puzzle(self, board):
-        """ solve the sudoku puzzle with backtracking """
+    def solve_puzzle(self, board) -> bool:
+        """
+        Solve the Sudoku puzzle using backtracking algorithm
+
+        :param board: a list of lists containing integers 1 to 9
+        :return: a boolean true or false
+        """
         for i in range(81):
             row = i // 9
             col = i % 9
@@ -53,8 +58,13 @@ class Sudoku:
         board[row][col] = 0
         return False
 
-    def generate_solution(self, board):
-        """generates a full solution with backtracking"""
+    def generate_solution(self, board) -> bool:
+        """
+        Generate a full solution using backtracking algorithm
+
+        :param board: a list of lists containing integers 1 to 9
+        :return: a boolean true or false
+        """
         number_list = [i for i in range(1, 10)]
         empty = find_empty(board)
         if not empty:
@@ -77,9 +87,12 @@ class Sudoku:
         return False
 
     def remove_numbers_from_board(self):
+        """ Remove numbers from the board and check if it still has a unique solution. """
         # get all non-empty squares from solution board
         non_empty_squares = get_non_empty_squares(self.board)
         non_empty_squares_count = len(non_empty_squares)
+        # this is the threshold of difficulty the puzzle we are creating
+        # the higher the number, the harder the generated puzzle will be
         rounds = 3
 
         while rounds > 0 and non_empty_squares_count >= 17:
@@ -148,7 +161,13 @@ def find_empty(board) -> tuple:
     return None
 
 
-def get_non_empty_squares(board):
+def get_non_empty_squares(board) -> list:
+    """
+    Get all non-empty squares from a Sudoku board
+
+    :param board: a list of lists containing integers 1 to 9
+    :return: a list of tuples containing the coordinates of non-empty squares
+    """
     non_empty_squares = list()
     for i in range(len(board)):
         for j in range(len(board[i])):
