@@ -116,6 +116,10 @@ class Grid:
             return int(row), int(col)
 
     def solve_gui(self):
+        """
+        Solve the Sudoku puzzle using backtracking algorithm.
+        Update the model every time a guess attempt is made.
+        """
         self.update_model()
         empty = sudoku.find_empty(self.model)
         if not empty:
@@ -190,6 +194,11 @@ class Box:
             pygame.draw.rect(win, (255, 0, 0), (x, y, square, square), 3)
 
     def draw_solution(self, win, correct=True):
+        """
+        Draw the guess attempt made by the backtracking algorithm.
+        If it is valid, show a green border.
+        If it is invalid, show a red border.
+        """
         fnt = pygame.font.SysFont("arial", 40)
 
         square = self.width / 9
@@ -233,6 +242,7 @@ def redraw_window(win, board, play_time, strikes):
 
 
 def main():
+    """ Drive the program. """
     win = pygame.display.set_mode((540, 600))
     pygame.display.set_caption("Sudoku")
     puzzle = sudoku.Sudoku()
