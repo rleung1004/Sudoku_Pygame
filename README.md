@@ -8,9 +8,12 @@ There is a GUI component to it if you would like to interact with the sudoku puz
 
 ## Installation
 To run this program, you need to install Python 3.
+
 Please visit https://www.python.org/download/releases/3.0/ to install the latest version.
 
-You will also need to install pygame from your terminal:
+You will also need to install pygame.
+
+Run the command in your terminal:
 `$ pip install pygame`
 
 ## Credits
