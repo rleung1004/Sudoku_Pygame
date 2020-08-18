@@ -4,7 +4,6 @@ Sudoku using pygame GUI
 ## Description
 Sudoku is a very simple yet complicated game, and I have used the backtracking algorithm to create and solve Sudoku boards.
 A sudoku object can be made by instatiating a Sudoku object, and its methods are to generate a puzzle, print the current state of the puzzle, and solve the puzzle.
-Please run GUI.py to play the Sudoku puzzle with pygame window.
 
 ## Installation
 To run this program, you need to install Python 3.
@@ -15,6 +14,8 @@ You will also need to install pygame.
 
 Run the command in your terminal:
 `$ pip install pygame`
+
+Run GUI.py to play the Sudoku puzzle with pygame window.
 
 ## Credits
 This project was inspired by Tech with Tim.
