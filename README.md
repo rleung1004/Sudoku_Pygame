@@ -14,5 +14,6 @@ You will also need to install pygame from your terminal:
 `$ pip install pygame`
 
 ## Credits
-This project was inspired by Tech with Tim
+This project was inspired by Tech with Tim.
+
 Link to his YouTube channel: https://www.youtube.com/channel/UC4JX40jDee_tINbkjycV4Sg
