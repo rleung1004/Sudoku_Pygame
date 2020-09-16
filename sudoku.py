@@ -177,6 +177,30 @@ def get_non_empty_squares(board) -> list:
     return non_empty_squares
 
 
+def solve(board: list) -> bool:
+    """
+    Solve the given sudoku board.
+    :param board: a list of lits containing integers 1 to 9
+    :return: true if board is solved, else false
+    """
+    find = find_empty(board)
+    if not find:
+        return True
+    else:
+        row, col = find
+
+    for i in range(1, 10):
+        if valid(board, i, (row, col)):
+            board[row][col] = i
+
+            if solve(board):
+                return True
+
+            board[row][col] = 0
+
+    return False
+
+
 def main():
     sudoku = Sudoku()
     sudoku.print_board()
